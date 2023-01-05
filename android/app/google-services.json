@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "572624039665",
+    "project_id": "wp-family-analysis",
+    "storage_bucket": "wp-family-analysis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572624039665:android:fac93e289e5c44c4094350",
+        "android_client_info": {
+          "package_name": "com.family.analysis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "572624039665-ihup0ds58u874u6birs3egiiq5olecdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdSir9mka5bVXv8P2480TN_wtiuctx7fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572624039665-ihup0ds58u874u6birs3egiiq5olecdn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

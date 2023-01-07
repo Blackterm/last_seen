@@ -16,6 +16,7 @@ import '../../../domain/entities/langauge_register.dart';
 import '../../../domain/repositories/home_page_repository.dart';
 import '../../widgets/langauge_change_page.dart';
 import '../../widgets/privacy_and_policy.dart';
+import '../devices/devices_view.dart';
 
 class SettingsController extends Controller {
   final SettingsPresenter _presenter;
@@ -40,7 +41,6 @@ class SettingsController extends Controller {
     _presenter.getLangaugeRegister();
     _presenter.getSettings(deviceImei!);
     _presenter.getLastSeenLanguages(deviceImei!);
-
   }
 
   @override
@@ -75,6 +75,16 @@ class SettingsController extends Controller {
   }
 
   late List<Map> list = [
+    {
+      "icon": Bx.devices,
+      "title": "devices".tr(),
+      "onTap": () {
+        Navigator.push(
+          getContext(),
+          MaterialPageRoute(builder: (context) => DevicesView()),
+        );
+      },
+    },
     {
       "icon": Bx.support,
       "title": "support".tr(),

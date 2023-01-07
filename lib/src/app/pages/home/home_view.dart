@@ -14,6 +14,7 @@ import 'package:wpfamilylastseen/src/app/pages/settings/settings_view.dart';
 import 'package:wpfamilylastseen/src/data/repositories/data_home_page_repository.dart';
 import 'package:wpfamilylastseen/src/domain/entities/last_seen_numbers.dart';
 import '../../constants/colors.dart';
+import '../../widgets/default_floating_button.dart';
 import '../../widgets/home_page_popups.dart';
 import '../../widgets/home_wigets.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -41,7 +42,7 @@ class _HomeViewState extends ViewState<HomeView, HomeController> {
       floatingActionButton: ControlledWidgetBuilder<HomeController>(
           builder: (context, controller) {
         return controller.langaugeRegister != null
-            ? AddNumberWidget(
+            ? DefaultFloatingButton(
                 title: 'addNumber'.tr(),
                 pressed: () {
                   controller.purchaseIsAvailbleControl();
@@ -458,31 +459,7 @@ class _HomePagePhoneCardTileState extends State<HomePagePhoneCardTile> {
   }
 }
 
-class AddNumberWidget extends StatelessWidget {
-  final Function()? pressed;
-  final String? title;
 
-  const AddNumberWidget({
-    required this.pressed,
-    required this.title,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
-      backgroundColor: Colorize.primary,
-      foregroundColor: Colorize.black,
-      extendedPadding: const EdgeInsets.symmetric(horizontal: 24.0),
-      onPressed: pressed,
-      label: Text(title!,
-          style: const TextStyle(
-              color: Colorize.black,
-              letterSpacing: 0.4,
-              fontWeight: FontWeight.w900)),
-      icon: const Iconify(FluentMdl2.add_phone, color: Colorize.black),
-    );
-  }
-}
 
 class NullPhoneWidget extends StatelessWidget {
   const NullPhoneWidget({Key? key}) : super(key: key);

@@ -19,6 +19,7 @@ import '../../../domain/entities/last_seen_number.dart';
 import '../../../domain/entities/last_seen_settings.dart';
 import '../../../domain/repositories/home_page_repository.dart';
 import '../../widgets/analitics_pages.dart';
+import '../../widgets/default_dialog.dart';
 import '../../widgets/default_notification_banner.dart';
 import '../../widgets/home_wigets.dart';
 import '../add_number/add_number_view.dart';
@@ -135,9 +136,12 @@ class HomeController extends Controller {
       if (!isEDeclarationFetched) {
         langaugeRegister = response;
 
-        useDemo == null
-            ? sharedPreferences!.setBool('useDemo', response.useDemo!)
-            : langaugeRegister!.useDemo = useDemo;
+        langaugeRegister != null
+            ? useDemo == null
+                ? sharedPreferences!
+                    .setBool('useDemo', langaugeRegister!.useDemo!)
+                : langaugeRegister!.useDemo = useDemo
+            : null;
 
         refreshUI();
         return;
@@ -148,7 +152,7 @@ class HomeController extends Controller {
       if (response == null) return;
       if (!isEDeclarationFetched) {
         lastSeenSettings = response;
-        if (lastSeenSettings!.isShowModal != 0) {
+        if (lastSeenSettings != null && lastSeenSettings!.isShowModal != 0) {
           if (!langaugeRegister!.useDemo!) {
             Timer(
               Duration(
@@ -237,6 +241,10 @@ class HomeController extends Controller {
     };
 
     _presenter.langaugeRegisterOnError = (e) {
+      log(e);
+    };
+
+    _presenter.settingsOnError = (e) {
       log(e);
     };
   }

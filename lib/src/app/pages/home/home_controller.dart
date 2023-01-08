@@ -22,6 +22,7 @@ import '../../widgets/analitics_pages.dart';
 import '../../widgets/default_dialog.dart';
 import '../../widgets/default_notification_banner.dart';
 import '../../widgets/home_wigets.dart';
+import '../../widgets/tracking_dialog.dart';
 import '../add_number/add_number_view.dart';
 import 'home_view.dart';
 
@@ -121,6 +122,13 @@ class HomeController extends Controller {
     _presenter.getLangaugeRegister();
     _presenter.getNumbers(deviceImei!);
     _presenter.getSettings(deviceImei!);
+
+    Navigator.push(
+      getContext(),
+      MaterialPageRoute(
+        builder: (context) => TrackingDialog(),
+      ),
+    );
   }
 
   @override
@@ -258,6 +266,7 @@ class HomeController extends Controller {
   void refreshView() {
     _presenter.getLangaugeRegister();
     _presenter.getNumbers(deviceImei!);
+    _presenter.getSettings(deviceImei!);
   }
 
   void numberQuery(String numberId) {

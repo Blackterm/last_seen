@@ -5,6 +5,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/fa6_solid.dart';
 import 'package:wpfamilylastseen/src/app/pages/devices/devices_controller.dart';
+import 'package:wpfamilylastseen/src/app/widgets/add_device_page.dart';
 
 import '../../constants/colors.dart';
 import '../../widgets/default_floating_button.dart';
@@ -27,7 +28,14 @@ class _DevicesViewState extends ViewState<DevicesView, DevicesController> {
       key: globalKey,
       floatingActionButton: ControlledWidgetBuilder<DevicesController>(
           builder: (context, controller) {
-        return DefaultFloatingButton(title: 'addDevice'.tr(), pressed: () {});
+        return DefaultFloatingButton(
+            title: 'addDevice'.tr(),
+            pressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddDevicePage()),
+              );
+            });
       }),
       appBar: AppBar(
         centerTitle: true,

@@ -143,16 +143,11 @@ class HomeController extends Controller {
       if (response == null) return;
       if (!isEDeclarationFetched) {
         langaugeRegister = response;
+        refreshUI();
 
         langaugeRegister != null
-            ? useDemo == null
-                ? sharedPreferences!
-                    .setBool('useDemo', langaugeRegister!.useDemo!)
-                : langaugeRegister!.useDemo = useDemo
+            ? langaugeRegisterWait(langaugeRegister!)
             : null;
-
-        refreshUI();
-        return;
       }
     };
 
@@ -160,29 +155,8 @@ class HomeController extends Controller {
       if (response == null) return;
       if (!isEDeclarationFetched) {
         lastSeenSettings = response;
-        if (lastSeenSettings != null && lastSeenSettings!.isShowModal != 0) {
-          if (!langaugeRegister!.useDemo!) {
-            Timer(
-              Duration(
-                  seconds:
-                      response.ctaPeriod != null ? response.ctaPeriod! : 6),
-              () => Navigator.push(
-                getContext(),
-                MaterialPageRoute(
-                  builder: (context) => TrialFreePremium(
-                    premiumStatus: (status) {
-                      isPremium = status;
-                      refreshUI();
-                    },
-                    controller: this,
-                  ),
-                ),
-              ),
-            );
-            return;
-          }
-          return;
-        }
+        refreshUI();
+        lastSeenSettings != null ? settingsWait(lastSeenSettings!) : null;
       }
     };
 
@@ -255,6 +229,37 @@ class HomeController extends Controller {
     _presenter.settingsOnError = (e) {
       log(e);
     };
+  }
+
+  void langaugeRegisterWait(LangaugeRegister langaugeRegister) {
+    Future.delayed(Duration.zero).then(
+      (_) => useDemo == null
+          ? langaugeRegister.useDemo != null
+              ? sharedPreferences!.setBool('useDemo', langaugeRegister.useDemo!)
+              : null
+          : langaugeRegister.useDemo = useDemo,
+    );
+  }
+
+  void settingsWait(LastSeenSettings lastSeenSettings) {
+    Timer(
+      Duration(
+          seconds: lastSeenSettings.ctaPeriod != null
+              ? lastSeenSettings.ctaPeriod!
+              : 6),
+      () => Navigator.push(
+        getContext(),
+        MaterialPageRoute(
+          builder: (context) => TrialFreePremium(
+            premiumStatus: (status) {
+              isPremium = status;
+              refreshUI();
+            },
+            controller: this,
+          ),
+        ),
+      ),
+    );
   }
 
   void removeNumber(String id) {

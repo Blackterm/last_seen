@@ -17,7 +17,6 @@ class DevicesController extends Controller {
     await sharedPreferences!.getString('deviceImei') != null
         ? deviceImei = sharedPreferences!.getString('deviceImei')
         : null;
-    print('Girdi');
   }
 
   @override

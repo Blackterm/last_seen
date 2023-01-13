@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:wpfamilylastseen/src/domain/entities/device_connections.dart';
 import 'package:wpfamilylastseen/src/domain/entities/last_seen_languages.dart';
 import 'package:wpfamilylastseen/src/domain/entities/last_seen_number.dart';
 import 'package:wpfamilylastseen/src/domain/entities/purchase_control.dart';
@@ -30,6 +31,7 @@ class DataHomePageRepository implements HomePageRepository {
   EditNumber? _editNumber;
   PurchaseControl? purchaseControl;
   List<LastSeenLanguages> _lastSeenLanguages = [];
+  List<DeviceConnections> _deviceConnections = [];
 
   @override
   Future<LangaugeRegister?> getLangaugeRegister() async {
@@ -97,9 +99,8 @@ class DataHomePageRepository implements HomePageRepository {
 
       List jsonResponse = json.decode(response.body);
 
-      _lastSeenProduct = jsonResponse
-          .map((buttons) => LastSeenProduct.fromJson(buttons))
-          .toList();
+      _lastSeenProduct =
+          jsonResponse.map((value) => LastSeenProduct.fromJson(value)).toList();
 
       return _lastSeenProduct;
     } catch (e, st) {
@@ -120,7 +121,7 @@ class DataHomePageRepository implements HomePageRepository {
       List jsonResponse = json.decode(response.body);
 
       _lastGoogleProduct = jsonResponse
-          .map((buttons) => ApiGoogleProduct.fromJson(buttons))
+          .map((value) => ApiGoogleProduct.fromJson(value))
           .toList();
 
       return _lastGoogleProduct;
@@ -141,9 +142,8 @@ class DataHomePageRepository implements HomePageRepository {
 
       List jsonResponse = json.decode(response.body);
 
-      _lastSeenNumbers = jsonResponse
-          .map((buttons) => LastSeenNumbers.fromJson(buttons))
-          .toList();
+      _lastSeenNumbers =
+          jsonResponse.map((value) => LastSeenNumbers.fromJson(value)).toList();
 
       return _lastSeenNumbers;
     } catch (e, st) {
@@ -262,7 +262,7 @@ class DataHomePageRepository implements HomePageRepository {
       List jsonResponse = json.decode(response.body);
 
       _lastSeenLanguages = jsonResponse
-          .map((buttons) => LastSeenLanguages.fromJson(buttons))
+          .map((value) => LastSeenLanguages.fromJson(value))
           .toList();
 
       return _lastSeenLanguages;
@@ -288,6 +288,28 @@ class DataHomePageRepository implements HomePageRepository {
       purchaseControl = PurchaseControl.fromJson(jsonDecode(response.body));
 
       return purchaseControl;
+    } catch (e, st) {
+      print(e);
+      print(st);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<DeviceConnections>> getDeviceConnections(String device) async {
+    try {
+      var headers = {'X-Device': device, 'Accept': 'application/json'};
+      var body = await {};
+      http.Response response = await _lastSeenBaseRepository
+          .executeLastSeenRequest("GET", "connections", headers, body);
+
+      List jsonResponse = json.decode(response.body);
+
+      _deviceConnections = jsonResponse
+          .map((value) => DeviceConnections.fromJson(value))
+          .toList();
+
+      return _deviceConnections;
     } catch (e, st) {
       print(e);
       print(st);

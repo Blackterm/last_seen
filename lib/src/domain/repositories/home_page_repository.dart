@@ -1,4 +1,5 @@
 import 'package:wpfamilylastseen/src/domain/entities/add_number.dart';
+import 'package:wpfamilylastseen/src/domain/entities/device_connections.dart';
 import 'package:wpfamilylastseen/src/domain/entities/edit_number.dart';
 import 'package:wpfamilylastseen/src/domain/entities/langauge_register.dart';
 import 'package:wpfamilylastseen/src/domain/entities/last_seen_languages.dart';
@@ -25,4 +26,5 @@ abstract class HomePageRepository {
   Future<List<LastSeenLanguages>> getLastSeenLanguages(String device);
   Future<PurchaseControl?> getPurchaseControl(
       String product_sku, String verify_token);
+  Future<List<DeviceConnections>> getDeviceConnections(String device);
 }

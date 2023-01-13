@@ -6,6 +6,8 @@ import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/fa6_solid.dart';
 import 'package:wpfamilylastseen/src/app/pages/devices/devices_controller.dart';
 import 'package:wpfamilylastseen/src/app/widgets/add_device_page.dart';
+import 'package:wpfamilylastseen/src/app/widgets/default_progress_indicator.dart';
+import 'package:wpfamilylastseen/src/data/repositories/data_home_page_repository.dart';
 
 import '../../constants/colors.dart';
 import '../../widgets/default_floating_button.dart';
@@ -13,7 +15,7 @@ import '../../widgets/default_floating_button.dart';
 class DevicesView extends View {
   @override
   State<StatefulWidget> createState() {
-    return _DevicesViewState(DevicesController());
+    return _DevicesViewState(DevicesController(DataHomePageRepository()));
   }
 }
 
@@ -46,16 +48,22 @@ class _DevicesViewState extends ViewState<DevicesView, DevicesController> {
               physics: AlwaysScrollableScrollPhysics(
                 parent: BouncingScrollPhysics(),
               ),
-              child: Column(
-                children: [
-                  _PhoneDetailContainer(title: "0555", status: 1),
-                  _PhoneDetailContainer(title: "0555", status: 0),
-                  _PhoneDetailContainer(title: "0555", status: 1),
-                  _PhoneDetailContainer(title: "0555", status: 0),
-                  _PhoneDetailContainer(title: "0555", status: 0),
-                  _PhoneDetailContainer(title: "0555", status: 1),
-                ],
-              ),
+              child: ControlledWidgetBuilder<DevicesController>(
+                  builder: (context, controller) {
+                return controller.deviceConnectionsList != null
+                    ? ListView.builder(
+                        physics: ScrollPhysics(parent: BouncingScrollPhysics()),
+                        itemCount: controller.deviceConnectionsList!.length,
+                        primary: false,
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(16.0),
+                        itemBuilder: (context, index) => _PhoneDetailContainer(
+                            title:
+                                controller.deviceConnectionsList![index].name!,
+                            status: controller
+                                .deviceConnectionsList![index].status!))
+                    : DefaultProgressIndicator();
+              }),
             ),
           ),
         ],

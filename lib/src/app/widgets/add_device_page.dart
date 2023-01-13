@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:wpfamilylastseen/src/app/pages/devices/devices_controller.dart';
+import 'package:wpfamilylastseen/src/data/repositories/data_home_page_repository.dart';
 
 class AddDevicePage extends View {
   @override
   State<StatefulWidget> createState() {
-    return _AddDevicePageState(DevicesController());
+    return _AddDevicePageState(DevicesController(DataHomePageRepository()));
   }
 }
 

@@ -73,9 +73,6 @@ class _HomeActionTryDemoButtonState extends State<HomeActionTryDemoButton> {
             context,
             MaterialPageRoute(
               builder: (context) => TrialFreePremium(
-                premiumStatus: (status) {
-                  setState(() {});
-                },
                 controller: widget.controller,
               ),
             ),
@@ -453,10 +450,9 @@ class ActivityCard extends StatelessWidget {
 
 class TrialFreePremium extends StatelessWidget {
   final HomeController controller;
-  final Function(bool)? premiumStatus;
+
   const TrialFreePremium({
     Key? key,
-    this.premiumStatus,
     required this.controller,
   }) : super(key: key);
 
@@ -508,7 +504,6 @@ class TrialFreePremium extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8.0),
                           color: Colorize.primary,
                           onPressed: () {
-                            premiumStatus!(true);
                             Navigator.pop(context);
                             controller.purchaseIsAvailbleControl();
 
@@ -534,7 +529,6 @@ class TrialFreePremium extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: TextButton(
                     onPressed: () {
-                      premiumStatus!(false);
                       Navigator.pop(context);
                     },
                     child: Text("close".tr().toUpperCase(),

@@ -251,10 +251,7 @@ class HomeController extends Controller {
         getContext(),
         MaterialPageRoute(
           builder: (context) => TrialFreePremium(
-            premiumStatus: (status) {
-              isPremium = status;
-              refreshUI();
-            },
+            
             controller: this,
           ),
         ),

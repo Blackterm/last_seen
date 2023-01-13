@@ -5,7 +5,6 @@ import 'package:wpfamilylastseen/src/app/constants/colors.dart';
 class ConnectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     EdgeInsets padding = MediaQuery.of(context).padding;
     return Scaffold(
       body: Padding(

@@ -5,7 +5,6 @@ import 'package:iconify_flutter/icons/bx.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/eva.dart';
 import 'package:iconify_flutter/icons/fa6_solid.dart';
-import 'package:iconify_flutter/icons/fluent_mdl2.dart';
 import 'package:iconify_flutter/icons/gg.dart';
 import 'package:iconify_flutter/icons/ion.dart';
 import 'package:iconify_flutter/icons/wpf.dart';
@@ -36,7 +35,6 @@ class _HomeViewState extends ViewState<HomeView, HomeController> {
   @override
   Widget get view {
     EdgeInsets padding = MediaQuery.of(context).padding;
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: globalKey,
       floatingActionButton: ControlledWidgetBuilder<HomeController>(
@@ -198,7 +196,6 @@ class HomePagePhoneList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    EdgeInsets padding = MediaQuery.of(context).padding;
     Size size = MediaQuery.of(context).size;
     return phones!.length != 0
         ? Container(

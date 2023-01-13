@@ -22,8 +22,6 @@ class _DevicesViewState extends ViewState<DevicesView, DevicesController> {
 
   @override
   Widget get view {
-    EdgeInsets padding = MediaQuery.of(context).padding;
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: globalKey,
       floatingActionButton: ControlledWidgetBuilder<DevicesController>(
@@ -71,7 +69,6 @@ class _PhoneDetailContainer extends StatelessWidget {
   final int status;
 
   const _PhoneDetailContainer({
-    super.key,
     required this.title,
     required this.status,
   });

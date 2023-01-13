@@ -21,7 +21,7 @@ class DevicesController extends Controller {
 
   @override
   void initListeners() {
-    // TODO: implement initListeners
+   
   }
   void pagejumpController(value) {
     pageIndex = value;

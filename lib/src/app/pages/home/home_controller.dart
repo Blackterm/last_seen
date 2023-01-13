@@ -19,7 +19,6 @@ import '../../../domain/entities/last_seen_number.dart';
 import '../../../domain/entities/last_seen_settings.dart';
 import '../../../domain/repositories/home_page_repository.dart';
 import '../../widgets/analitics_pages.dart';
-import '../../widgets/default_dialog.dart';
 import '../../widgets/default_notification_banner.dart';
 import '../../widgets/home_wigets.dart';
 import '../../widgets/tracking_dialog.dart';

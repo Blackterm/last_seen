@@ -24,7 +24,6 @@ class _SplashViewState extends ViewState<SettingsView, SettingsController> {
     String deviceCountry = Platform.localeName.substring(3, 5);
 
     EdgeInsets padding = MediaQuery.of(context).padding;
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: globalKey,
       appBar: AppBar(

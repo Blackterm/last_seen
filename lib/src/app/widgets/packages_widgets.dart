@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_picker_dropdown.dart';
 import 'package:easy_localization/easy_localization.dart';

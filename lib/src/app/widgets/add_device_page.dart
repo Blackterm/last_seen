@@ -16,8 +16,6 @@ class _AddDevicePageState extends ViewState<AddDevicePage, DevicesController> {
 
   @override
   Widget get view {
-    EdgeInsets padding = MediaQuery.of(context).padding;
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: globalKey,
       body: ControlledWidgetBuilder<DevicesController>(

@@ -15,8 +15,6 @@ class _SplashViewState extends ViewState<SplashView, SplashController> {
 
   @override
   Widget get view {
-    EdgeInsets padding = MediaQuery.of(context).padding;
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: globalKey,
       body: Center(

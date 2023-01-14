@@ -1,10 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wpfamilylastseen/src/app/pages/devices/devices_presenter.dart';
+import 'package:wpfamilylastseen/src/domain/entities/add_connection.dart';
 import 'package:wpfamilylastseen/src/domain/entities/device_connections.dart';
 
 import '../../../domain/repositories/home_page_repository.dart';
+import '../../widgets/default_notification_banner.dart';
 
 class DevicesController extends Controller {
   final DevicesPresenter _presenter;
@@ -14,14 +17,14 @@ class DevicesController extends Controller {
 
   int pageIndex = 0;
   PageController pageController = PageController(initialPage: 0);
-
-  final String deneme = 'Deneme';
+  TextEditingController deviceNameController = TextEditingController();
 
   SharedPreferences? sharedPreferences;
 
   bool isListFetched = false;
   String? deviceImei;
   List<DeviceConnections>? deviceConnectionsList;
+  AddConnection? addConnection;
 
   @override
   void onInitState() async {
@@ -42,10 +45,38 @@ class DevicesController extends Controller {
         refreshUI();
       }
     };
+
+    _presenter.addConnectionOnNext = (AddConnection? response) {
+      if (response == null) return;
+      if (!isListFetched) {
+        addConnection = response;
+        refreshUI();
+        _presenter.getDeviceConnections(deviceImei!);
+      }
+    };
+
+    _presenter.removeConnectionOnNext = (dynamic response) async {
+      if (response == null) return;
+      if (response) {
+        _presenter.getDeviceConnections(deviceImei!);
+      } else {
+        DefaultNotificationBanner(
+                icon: Icon(Icons.error_outline),
+                text: "somethingswentwrong".tr(),
+                color: Colors.red,
+                context: getContext())
+            .show();
+      }
+    };
   }
 
-  void pagejumpController(value) {
-    pageIndex = value;
+  void addDevice(String deviceName) {
+    _presenter.postAddConnection(deviceName, deviceImei!);
+  }
+
+  void removeNumber(String connectionId) {
+    _presenter.removeConnection(connectionId, deviceImei!);
+
     refreshUI();
   }
 }

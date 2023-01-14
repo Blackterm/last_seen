@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:wpfamilylastseen/src/domain/entities/add_connection.dart';
 import 'package:wpfamilylastseen/src/domain/entities/device_connections.dart';
 import 'package:wpfamilylastseen/src/domain/entities/last_seen_languages.dart';
 import 'package:wpfamilylastseen/src/domain/entities/last_seen_number.dart';
@@ -32,6 +33,7 @@ class DataHomePageRepository implements HomePageRepository {
   PurchaseControl? purchaseControl;
   List<LastSeenLanguages> _lastSeenLanguages = [];
   List<DeviceConnections> _deviceConnections = [];
+  AddConnection? _addConnection;
 
   @override
   Future<LangaugeRegister?> getLangaugeRegister() async {
@@ -310,6 +312,54 @@ class DataHomePageRepository implements HomePageRepository {
           .toList();
 
       return _deviceConnections;
+    } catch (e, st) {
+      print(e);
+      print(st);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<AddConnection?> postAddConnection(
+      String deviceName, String device) async {
+    try {
+      var headers = {
+        'X-Device': device,
+        'Accept': 'application/json',
+      };
+      var body = await {
+        "name": deviceName,
+      };
+      http.Response response = await _lastSeenBaseRepository
+          .executeLastSeenRequest("POST", "add-connection", headers, body);
+
+      _addConnection = AddConnection.fromJson(jsonDecode(response.body));
+
+      return _addConnection;
+    } catch (e, st) {
+      print(e);
+      print(st);
+      rethrow;
+    }
+  }
+
+  @override
+  Future removeConnection(String connectionId, String device) async {
+    try {
+      var headers = {
+        'X-Device': device,
+        'Accept': 'application/json',
+      };
+      var body = await {};
+      http.Response response =
+          await _lastSeenBaseRepository.executeLastSeenRequest(
+              "DELETE", "delete-connection/$connectionId", headers, body);
+
+      if (response.statusCode == 204) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (e, st) {
       print(e);
       print(st);

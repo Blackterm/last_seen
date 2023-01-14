@@ -1,3 +1,4 @@
+import 'package:wpfamilylastseen/src/domain/entities/add_connection.dart';
 import 'package:wpfamilylastseen/src/domain/entities/add_number.dart';
 import 'package:wpfamilylastseen/src/domain/entities/device_connections.dart';
 import 'package:wpfamilylastseen/src/domain/entities/edit_number.dart';
@@ -27,4 +28,6 @@ abstract class HomePageRepository {
   Future<PurchaseControl?> getPurchaseControl(
       String product_sku, String verify_token);
   Future<List<DeviceConnections>> getDeviceConnections(String device);
+  Future<AddConnection?> postAddConnection(String deviceName, String device);
+  Future removeConnection(String connectionId, String device);
 }

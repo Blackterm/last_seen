@@ -1,14 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/fa6_solid.dart';
 import 'package:iconify_flutter/icons/icon_park_twotone.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wpfamilylastseen/src/app/pages/devices/devices_controller.dart';
 import 'package:wpfamilylastseen/src/app/widgets/default_progress_indicator.dart';
 import 'package:wpfamilylastseen/src/data/repositories/data_home_page_repository.dart';
+import '../../../domain/entities/device_connections.dart';
 import '../../constants/colors.dart';
 import '../../widgets/analitics_custom_widgets.dart';
 import '../../widgets/default_floating_button.dart';
@@ -34,7 +37,7 @@ class _DevicesViewState extends ViewState<DevicesView, DevicesController> {
         return DefaultFloatingButton(
             title: 'addDevice'.tr(),
             pressed: () {
-              _editDevicePopUp(context, size, controller);
+              _addDevicePopUp(context, size, controller);
             });
       }),
       appBar: AppBar(
@@ -67,6 +70,10 @@ class _DevicesViewState extends ViewState<DevicesView, DevicesController> {
                                     .deviceConnectionsList![index].id!
                                     .toString());
                               },
+                              editDevice: () {
+                                editDevicePopUp(context, controller,
+                                    controller.deviceConnectionsList![index]);
+                              },
                             ))
                     : DefaultProgressIndicator();
               }),
@@ -82,11 +89,13 @@ class _PhoneDetailContainer extends StatelessWidget {
   final String title;
   final int status;
   final Function() removeConnection;
+  final Function() editDevice;
 
   const _PhoneDetailContainer({
     required this.title,
     required this.status,
     required this.removeConnection,
+    required this.editDevice,
   });
 
   @override
@@ -157,7 +166,7 @@ class _PhoneDetailContainer extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: editDevice,
               icon: Iconify(
                 Fa6Solid.pen_to_square,
                 color: Colorize.icon,
@@ -171,7 +180,7 @@ class _PhoneDetailContainer extends StatelessWidget {
   }
 }
 
-_editDevicePopUp(
+_addDevicePopUp(
   BuildContext context,
   Size size,
   DevicesController controller,
@@ -221,6 +230,83 @@ _editDevicePopUp(
         );
       },
     ));
+
+editDevicePopUp(
+  BuildContext context,
+
+  DevicesController controller,
+  DeviceConnections deviceConnections,
+) =>
+    popUpContainer(
+      context,
+      StatefulBuilder(
+        builder: (context, setState) {
+          Size size = MediaQuery.of(context).size;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              standartTitle(deviceConnections.name!),
+              const SizedBox(height: 20.0),
+              Text(
+                'Hızlı Takibin başlamasın için lütfen cihazınızda yüklü olan whatsapp uygulamasından kare kod okutunuz',
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Colorize.textSec,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colorize.layer,
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          child: Text(
+                            deviceConnections.url!,
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          onTap: () {
+                            _launchUrl(deviceConnections.url!);
+                          },
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            Clipboard.setData(
+                                ClipboardData(text: deviceConnections.url!));
+                            controller.copyController();
+                          },
+                          icon: Icon(Icons.file_copy_outlined))
+                    ],
+                  )),
+              const SizedBox(height: 20.0),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "close".tr().toUpperCase(),
+                  style: const TextStyle(color: Colorize.textSec),
+                ),
+              ),
+              const SizedBox(height: 20.0),
+            ],
+          );
+        },
+      ),
+    );
+
 standartTitle(String text) => Text(text,
     style: const TextStyle(
         fontSize: 22.0, fontWeight: FontWeight.w500, color: Colorize.text));
+
+void _launchUrl(String url) async {
+  final Uri _uri = Uri.parse(url);
+  launchUrl(_uri, mode: LaunchMode.platformDefault);
+}

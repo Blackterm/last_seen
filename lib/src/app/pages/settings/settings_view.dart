@@ -62,7 +62,7 @@ class _SplashViewState extends ViewState<SettingsView, SettingsController> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('email'.tr(),
+                      Text('email'.tr() + " : ",
                           style: TextStyle(color: Colorize.text)),
                       controller.lastSeenSettings != null
                           ? Text(

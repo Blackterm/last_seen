@@ -8,6 +8,7 @@ import 'package:wpfamilylastseen/src/domain/entities/device_connections.dart';
 
 import '../../../domain/repositories/home_page_repository.dart';
 import '../../widgets/default_notification_banner.dart';
+import 'devices_view.dart';
 
 class DevicesController extends Controller {
   final DevicesPresenter _presenter;
@@ -25,6 +26,8 @@ class DevicesController extends Controller {
   String? deviceImei;
   List<DeviceConnections>? deviceConnectionsList;
   AddConnection? addConnection;
+
+  bool toDoCopy = false;
 
   @override
   void onInitState() async {
@@ -78,5 +81,14 @@ class DevicesController extends Controller {
     _presenter.removeConnection(connectionId, deviceImei!);
 
     refreshUI();
+  }
+
+  void copyController() {
+    DefaultNotificationBanner(
+      icon: Icon(Icons.check),
+      text: "Başarılı bir şekilde kopyalandı",
+      color: Colors.green,
+      context: getContext(),
+    ).show();
   }
 }

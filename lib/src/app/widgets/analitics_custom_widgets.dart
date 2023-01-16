@@ -386,23 +386,27 @@ popUpContainer(BuildContext context, Widget child) {
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (context) => BackdropFilter(
-      filter: ImageFilter.blur(
-        sigmaX: 4.0,
-        sigmaY: 4.0,
-      ),
-      child: Center(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16.0),
-          padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16.0),
-          decoration: BoxDecoration(
-            color: Colorize.black,
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          child: child,
+    builder: (context) =>
+        StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 4.0,
+          sigmaY: 4.0,
         ),
-      ),
-    ),
+        child: Center(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16.0),
+            decoration: BoxDecoration(
+              color: Colorize.black,
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: child,
+          ),
+        ),
+      );
+    }),
   );
 }
 

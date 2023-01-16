@@ -8,7 +8,6 @@ import 'package:iconify_flutter/icons/fa6_solid.dart';
 import 'package:iconify_flutter/icons/gg.dart';
 import 'package:iconify_flutter/icons/ion.dart';
 import 'package:iconify_flutter/icons/wpf.dart';
-import 'package:wpfamilylastseen/src/app/pages/devices/devices_view.dart';
 import 'package:wpfamilylastseen/src/app/pages/home/home_controller.dart';
 import 'package:wpfamilylastseen/src/app/pages/settings/settings_view.dart';
 import 'package:wpfamilylastseen/src/data/repositories/data_home_page_repository.dart';
@@ -20,6 +19,7 @@ import '../../widgets/home_wigets.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../widgets/tracking_dialog.dart';
+import '../devices/devices_view.dart';
 
 class HomeView extends View {
   @override
@@ -460,13 +460,32 @@ class _HomePagePhoneCardTileState extends State<HomePagePhoneCardTile> {
                                 color: Colorize.red,
                                 borderRadius: BorderRadius.circular(4.0),
                               ),
-                              child: Text('Kurulum bekliyor'),
+                              child: Text('setupWait'.tr()),
                             ),
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => TrackingDialog(),
+                                  builder: (context) => TrackingDialog(
+                                    controller: widget.controller,
+                                    slowlyFollow: () {
+                                      widget.controller.editConnectionControl(
+                                          "0", widget.phones!.id.toString());
+                                    },
+                                    fastFollow: () {
+                                      widget.controller.sharedPreferences!
+                                          .setString('numId',
+                                              widget.phones!.id.toString());
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DevicesView(true),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               );
                             },

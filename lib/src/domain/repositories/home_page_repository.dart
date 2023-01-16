@@ -30,4 +30,6 @@ abstract class HomePageRepository {
   Future<List<DeviceConnections>> getDeviceConnections(String device);
   Future<AddConnection?> postAddConnection(String deviceName, String device);
   Future removeConnection(String connectionId, String device);
+  Future postEditConnection(
+      String connectionId, String numberId, String device);
 }

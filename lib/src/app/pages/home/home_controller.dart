@@ -148,7 +148,12 @@ class HomeController extends Controller {
       if (!isEDeclarationFetched) {
         lastSeenSettings = response;
         refreshUI();
-        lastSeenSettings != null ? settingsWait(lastSeenSettings!) : null;
+
+        !useDemo!
+            ? lastSeenSettings != null
+                ? settingsWait(lastSeenSettings!)
+                : null
+            : null;
       }
     };
 
@@ -207,6 +212,23 @@ class HomeController extends Controller {
             (route) => false);
 
         refreshUI();
+      }
+    };
+
+    _presenter.postEditConnectionOnNext = (dynamic response) async {
+      if (response == null) return;
+      if (response) {
+        Navigator.pushAndRemoveUntil(
+            (getContext()),
+            CupertinoPageRoute(builder: (context) => HomeView()),
+            (route) => false);
+      } else {
+        DefaultNotificationBanner(
+                icon: Icon(Icons.error_outline),
+                text: "somethingswentwrong".tr(),
+                color: Colors.red,
+                context: getContext())
+            .show();
       }
     };
 
@@ -308,5 +330,12 @@ class HomeController extends Controller {
         builder: (context) => AddNumberView(),
       ),
     );
+  }
+
+  void editConnectionControl(
+    String connectionId,
+    String numberId,
+  ) {
+    _presenter.postEditConnection(connectionId, numberId, deviceImei!);
   }
 }

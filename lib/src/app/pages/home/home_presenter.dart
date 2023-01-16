@@ -4,6 +4,7 @@ import 'package:wpfamilylastseen/src/domain/entities/last_seen_numbers.dart';
 import 'package:wpfamilylastseen/src/domain/usecases/get_langauge_register.dart';
 import 'package:wpfamilylastseen/src/domain/usecases/get_last_seen_number.dart';
 import 'package:wpfamilylastseen/src/domain/usecases/get_last_seen_numbers.dart';
+import 'package:wpfamilylastseen/src/domain/usecases/post_edit_connection.dart';
 import 'package:wpfamilylastseen/src/domain/usecases/post_edit_number.dart';
 import 'package:wpfamilylastseen/src/domain/usecases/remove_number.dart';
 import '../../../domain/entities/langauge_register.dart';
@@ -31,12 +32,16 @@ class HomePresenter extends Presenter {
   late Function settingsOnNext;
   late Function settingsOnError;
 
+  late Function postEditConnectionOnNext;
+  late Function postEditConnectionOnError;
+
   final GetLangaugeRegister _getLangaugeRegister;
   final GetLastSeenNumbers _getLastSeenNumbers;
   final RemoveNumber _removeNumber;
   final PostEditNumber _postEditNumber;
   final GetLastSeenNumber _getLastSeenNumber;
   final GetLastSeenSettings _getLastSeenSettings;
+  final PostEditConnection _postEditConnection;
 
   HomePresenter(HomePageRepository _homePageRepository)
       : _getLangaugeRegister = GetLangaugeRegister(_homePageRepository),
@@ -44,7 +49,8 @@ class HomePresenter extends Presenter {
         _removeNumber = RemoveNumber(_homePageRepository),
         _postEditNumber = PostEditNumber(_homePageRepository),
         _getLastSeenNumber = GetLastSeenNumber(_homePageRepository),
-        _getLastSeenSettings = GetLastSeenSettings(_homePageRepository);
+        _getLastSeenSettings = GetLastSeenSettings(_homePageRepository),
+        _postEditConnection = PostEditConnection(_homePageRepository);
 
   void getLangaugeRegister() {
     _getLangaugeRegister.execute(_LangaugeRegisterObserver(this));
@@ -74,6 +80,11 @@ class HomePresenter extends Presenter {
   void getSettings(String device) {
     _getLastSeenSettings.execute(
         _SettingsObserver(this), GetLastSeenSettingsParams(device));
+  }
+
+  void postEditConnection(String connectionId, String numberId, String device) {
+    _postEditConnection.execute(_PostEditConnectionObserver(this),
+        PostEditConnectionParams(connectionId, numberId, device));
   }
 
   @override
@@ -198,5 +209,24 @@ class _SettingsObserver extends Observer<LastSeenSettings?> {
   @override
   void onNext(LastSeenSettings? response) {
     _presenter.settingsOnNext(response);
+  }
+}
+
+class _PostEditConnectionObserver extends Observer<dynamic> {
+  final HomePresenter _presenter;
+
+  _PostEditConnectionObserver(this._presenter);
+
+  @override
+  void onComplete() {}
+
+  @override
+  void onError(e) {
+    _presenter.postEditConnectionOnError(e);
+  }
+
+  @override
+  void onNext(dynamic response) {
+    _presenter.postEditConnectionOnNext(response);
   }
 }

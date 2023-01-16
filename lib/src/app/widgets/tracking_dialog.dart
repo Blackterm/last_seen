@@ -1,11 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:wpfamilylastseen/src/app/pages/devices/devices_view.dart';
+import 'package:wpfamilylastseen/src/app/pages/home/home_controller.dart';
 import '../constants/colors.dart';
 
 class TrackingDialog extends StatelessWidget {
-  const TrackingDialog({
+  final Function() slowlyFollow;
+  final Function() fastFollow;
+  final HomeController controller;
+  TrackingDialog({
     Key? key,
+    required this.slowlyFollow,
+    required this.fastFollow,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -30,70 +36,74 @@ class TrackingDialog extends StatelessWidget {
                     ),
                     SizedBox(height: size.height * 0.12),
                     Text(
-                      'Lütfen takip etmek için aşağıdaki seçeneklerden birini seçiniz. 🤗 👇',
+                      "trackingTitle".tr(),
                       style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.w500,
                           color: Colorize.text),
                     ),
                     SizedBox(height: size.height * 0.12),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(8.0),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DevicesView(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: size.width,
-                        height: size.height * 0.07,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: Colorize.primary,
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Hızlı Takip",
-                            style: const TextStyle(
-                                color: Colorize.black, fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    Text(
-                        "Hızlı takip edebilmek için kullandığınız WhatsApp uygulamasının karekodunu yönlendilirdiğiniz sayfaya okutmanız gerekiyor. Okuma işlemi başarılı tamamladıktan sonra artık dilediğiniz numarayı anlık olarak takip edebileceksiniz.🥳 ",
-                        style: const TextStyle(
-                            fontSize: 12.0, color: Colorize.textSec)),
+                    controller.lastSeenSettings!.use_speedy != 0
+                        ? Column(
+                            children: [
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: fastFollow,
+                                child: Container(
+                                  width: size.width,
+                                  height: size.height * 0.07,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    color: Colorize.primary,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "fastFollow".tr(),
+                                      style: const TextStyle(
+                                          color: Colorize.black,
+                                          fontSize: 16.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16.0),
+                              Text("fastContent".tr(),
+                                  style: const TextStyle(
+                                      fontSize: 12.0, color: Colorize.textSec)),
+                            ],
+                          )
+                        : Container(),
                     SizedBox(height: size.height * 0.12),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(8.0),
-                      onTap: () {},
-                      child: Container(
-                        width: size.width,
-                        height: size.height * 0.07,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: Colorize.primary,
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Yavaş Takip",
-                            style: const TextStyle(
-                                color: Colorize.black, fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    Text(
-                        "Numarayı takip edebilmek için ortalama 2-3 hafta kadar kadar beklemeniz gerekmektedir ardından yavaş takip ile takip etmek istediğiniz numarayı takip edebileceksiniz. 😍",
-                        style: const TextStyle(
-                            fontSize: 12.0, color: Colorize.textSec)),
+                    controller.lastSeenSettings!.use_slowly != 0
+                        ? Column(
+                            children: [
+                              InkWell(
+                                borderRadius: BorderRadius.circular(8.0),
+                                onTap: slowlyFollow,
+                                child: Container(
+                                  width: size.width,
+                                  height: size.height * 0.07,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    color: Colorize.primary,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "slowlyFollow".tr(),
+                                      style: const TextStyle(
+                                          color: Colorize.black,
+                                          fontSize: 16.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16.0),
+                              Text("slowlyContent".tr(),
+                                  style: const TextStyle(
+                                      fontSize: 12.0, color: Colorize.textSec)),
+                            ],
+                          )
+                        : Container(),
                   ],
                 ),
               ),

@@ -16,9 +16,11 @@ import '../../constants/colors.dart';
 import '../../widgets/analitics_custom_widgets.dart';
 import '../../widgets/default_floating_button.dart';
 import '../../widgets/home_wigets.dart';
-import '../../widgets/tracking_dialog.dart';
 
 class DevicesView extends View {
+  final bool deneme;
+
+  DevicesView(this.deneme);
   @override
   State<StatefulWidget> createState() {
     return _DevicesViewState(DevicesController(DataHomePageRepository()));
@@ -47,6 +49,48 @@ class _DevicesViewState extends ViewState<DevicesView, DevicesController> {
       ),
       body: Column(
         children: [
+          widget.deneme
+              ? Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Text('selectSetupContent'.tr()),
+                )
+              : Container(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ControlledWidgetBuilder<DevicesController>(
+                    builder: (context, controller) {
+                  return Visibility(
+                    visible: controller.toDoSelect,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(8.0),
+                      onTap: () {
+                        controller.editConnectionControl(
+                            controller.connectionDeviceId!);
+                      },
+                      child: Container(
+                        width: size.width * 0.3,
+                        height: size.height * 0.05,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: Colorize.primary,
+                        ),
+                        child: Center(
+                          child: Text(
+                            "completeSetup".tr(),
+                            style: const TextStyle(
+                                color: Colorize.black, fontSize: 12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
           Expanded(
             child: SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(
@@ -61,22 +105,63 @@ class _DevicesViewState extends ViewState<DevicesView, DevicesController> {
                         primary: false,
                         shrinkWrap: true,
                         padding: const EdgeInsets.all(16.0),
-                        itemBuilder: (context, index) => _PhoneDetailContainer(
-                              title: controller
-                                  .deviceConnectionsList![index].name!,
-                              status: controller
-                                  .deviceConnectionsList![index].status!,
-                              removeConnection: () {
-                                controller.removeNumber(controller
-                                    .deviceConnectionsList![index].id!
-                                    .toString());
-                              },
-                              editDevice: () {
-                                editDevicePopUp(context, controller,
-                                    controller.deviceConnectionsList![index]);
-                              },
-                              controller: controller,
-                            ))
+                        itemBuilder: (context, index) => InkWell(
+                          child: _PhoneDetailContainer(
+                            isSelect: controller.isSelect![index],
+                            title:
+                                controller.deviceConnectionsList![index].name!,
+                            status: controller
+                                .deviceConnectionsList![index].status!,
+                            removeConnection: () {
+                              controller.removeNumber(controller
+                                  .deviceConnectionsList![index].id!
+                                  .toString());
+                            },
+                            editDevice: () {
+                              editDevicePopUp(
+                                context,
+                                controller,
+                                controller.deviceConnectionsList![index],
+                                () {
+                                  controller.removeNumber(controller
+                                      .deviceConnectionsList![index].id!
+                                      .toString());
+                                },
+                              );
+                            },
+                            controller: controller,
+                          ),
+                          onTap: () {
+                            widget.deneme
+                                ? setState(() {
+                                    if (controller.isSelect!.contains(true)) {
+                                      var i = controller.isSelect!
+                                          .indexWhere((v) => v == true);
+                                      controller.isSelect![i] = false;
+
+                                      controller.isSelect![index] =
+                                          !controller.isSelect![index];
+                                      controller.isSelect!.contains(true)
+                                          ? controller.toDoSelect = true
+                                          : controller.toDoSelect = false;
+                                      controller.connectionDeviceId = controller
+                                          .deviceConnectionsList![index].id!
+                                          .toString();
+                                    } else {
+                                      controller.isSelect![index] =
+                                          !controller.isSelect![index];
+                                      controller.isSelect!.contains(true)
+                                          ? controller.toDoSelect = true
+                                          : controller.toDoSelect = false;
+                                      controller.connectionDeviceId = controller
+                                          .deviceConnectionsList![index].id!
+                                          .toString();
+                                    }
+                                  })
+                                : null;
+                          },
+                        ),
+                      )
                     : DefaultProgressIndicator();
               }),
             ),
@@ -93,6 +178,7 @@ class _PhoneDetailContainer extends StatelessWidget {
   final Function() removeConnection;
   final Function() editDevice;
   final DevicesController controller;
+  final bool isSelect;
 
   const _PhoneDetailContainer({
     required this.title,
@@ -100,6 +186,7 @@ class _PhoneDetailContainer extends StatelessWidget {
     required this.removeConnection,
     required this.editDevice,
     required this.controller,
+    required this.isSelect,
   });
 
   @override
@@ -111,6 +198,7 @@ class _PhoneDetailContainer extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colorize.layer,
         borderRadius: BorderRadius.circular(8.0),
+        border: isSelect ? Border.all(color: Colorize.primary) : null,
       ),
       child: Row(
         children: [
@@ -124,44 +212,54 @@ class _PhoneDetailContainer extends StatelessWidget {
               SizedBox(
                 width: 10,
               ),
-              Container(
-                width: size.width * 0.2,
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colorize.text),
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 4.0),
+                        decoration: BoxDecoration(
+                          color:
+                              status != 0 ? Colorize.primary : Colorize.layer,
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Iconify(
+                              status != 0 ? Carbon.checkmark : Carbon.close,
+                              size: 10.0,
+                              color: Colorize.black,
+                            ),
+                            const SizedBox(width: 4.0),
+                            Text(
+                              status != 0 ? "active".tr() : "notActive".tr(),
+                              style: const TextStyle(
+                                fontSize: 10.0,
+                                color: Colorize.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: size.width * 0.2,
+                    child: Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colorize.text),
+                    ),
+                  ),
+                ],
               )
             ],
           ),
           SizedBox(
             width: 10,
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
-            decoration: BoxDecoration(
-              color: status != 0 ? Colorize.primary : Colorize.layer,
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Iconify(
-                  status != 0 ? Carbon.checkmark : Carbon.close,
-                  size: 10.0,
-                  color: Colorize.black,
-                ),
-                const SizedBox(width: 4.0),
-                Text(
-                  status != 0 ? "active".tr() : "notActive".tr(),
-                  style: const TextStyle(
-                    fontSize: 10.0,
-                    color: Colorize.black,
-                  ),
-                ),
-              ],
-            ),
           ),
           Spacer(),
           status != 0
@@ -192,7 +290,7 @@ class _PhoneDetailContainer extends StatelessWidget {
                       color: Colorize.red,
                       borderRadius: BorderRadius.circular(4.0),
                     ),
-                    child: Text('Kurulum bekliyor'),
+                    child: Text('setupWait'.tr()),
                   ),
                   onTap: editDevice,
                 )
@@ -257,6 +355,7 @@ editDevicePopUp(
   BuildContext context,
   DevicesController controller,
   DeviceConnections deviceConnections,
+  Function() removeConnection,
 ) =>
     popUpContainer(
       context,
@@ -269,7 +368,7 @@ editDevicePopUp(
               standartTitle(deviceConnections.name!),
               const SizedBox(height: 20.0),
               Text(
-                'Hızlı Takibin başlamasın için aşağıdaki linkten, cihazınızda yüklü olan whatsapp uygulamasından kare kod okutunuz',
+                'setupContent'.tr(),
                 style: TextStyle(
                   fontSize: 12.0,
                   color: Colorize.textSec,
@@ -308,6 +407,27 @@ editDevicePopUp(
                           icon: Icon(Icons.file_copy_outlined))
                     ],
                   )),
+              const SizedBox(height: 20.0),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: CupertinoButton(
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: Colorize.layer,
+                    onPressed: removeConnection,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Iconify(Carbon.trash_can,
+                            size: 20.0, color: Colorize.red),
+                        const SizedBox(width: 8.0),
+                        Text(
+                          "removeConnection".tr(),
+                          style: const TextStyle(
+                              color: Colorize.red, fontSize: 16.0),
+                        ),
+                      ],
+                    )),
+              ),
               const SizedBox(height: 20.0),
               TextButton(
                 onPressed: () => Navigator.pop(context),

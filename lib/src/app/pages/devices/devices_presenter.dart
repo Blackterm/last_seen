@@ -6,6 +6,7 @@ import 'package:wpfamilylastseen/src/domain/usecases/post_add_connection.dart';
 import 'package:wpfamilylastseen/src/domain/usecases/remove_connection.dart';
 
 import '../../../domain/repositories/home_page_repository.dart';
+import '../../../domain/usecases/post_edit_connection.dart';
 
 class DevicesPresenter extends Presenter {
   late Function deviceConnectionsOnNext;
@@ -17,14 +18,19 @@ class DevicesPresenter extends Presenter {
   late Function removeConnectionOnNext;
   late Function removeConnectionOnError;
 
+  late Function postEditConnectionOnNext;
+  late Function postEditConnectionOnError;
+
   final GetDeviceConnections _getDeviceConnections;
   final PostAddConnection _postAddConnection;
   final RemoveConnection _removeConnection;
+  final PostEditConnection _postEditConnection;
 
   DevicesPresenter(HomePageRepository _homePageRepository)
       : _getDeviceConnections = GetDeviceConnections(_homePageRepository),
         _postAddConnection = PostAddConnection(_homePageRepository),
-        _removeConnection = RemoveConnection(_homePageRepository);
+        _removeConnection = RemoveConnection(_homePageRepository),
+        _postEditConnection = PostEditConnection(_homePageRepository);
 
   void getDeviceConnections(String device) {
     _getDeviceConnections.execute(
@@ -39,6 +45,11 @@ class DevicesPresenter extends Presenter {
   void removeConnection(String connectionId, String device) {
     _removeConnection.execute(_RemoveConnectionObserver(this),
         RemoveConnectionParams(connectionId, device));
+  }
+
+  void postEditConnection(String connectionId, String numberId, String device) {
+    _postEditConnection.execute(_PostEditConnectionObserver(this),
+        PostEditConnectionParams(connectionId, numberId, device));
   }
 
   @override
@@ -101,5 +112,24 @@ class _RemoveConnectionObserver extends Observer<dynamic> {
   @override
   void onNext(dynamic response) {
     _presenter.removeConnectionOnNext(response);
+  }
+}
+
+class _PostEditConnectionObserver extends Observer<dynamic> {
+  final DevicesPresenter _presenter;
+
+  _PostEditConnectionObserver(this._presenter);
+
+  @override
+  void onComplete() {}
+
+  @override
+  void onError(e) {
+    _presenter.postEditConnectionOnError(e);
+  }
+
+  @override
+  void onNext(dynamic response) {
+    _presenter.postEditConnectionOnNext(response);
   }
 }

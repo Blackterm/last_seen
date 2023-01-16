@@ -366,4 +366,32 @@ class DataHomePageRepository implements HomePageRepository {
       rethrow;
     }
   }
+
+  @override
+  Future postEditConnection(
+      String connectionId, String numberId, String device) async {
+    try {
+      var headers = {
+        'X-Device': device,
+        'Accept': 'application/json',
+      };
+      var body = await {
+        "use_type": "1",
+        "connection_id": connectionId,
+      };
+      http.Response response =
+          await _lastSeenBaseRepository.executeLastSeenRequest(
+              "POST", "edit-speed/$numberId", headers, body);
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e, st) {
+      print(e);
+      print(st);
+      rethrow;
+    }
+  }
 }

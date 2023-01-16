@@ -81,7 +81,7 @@ class SettingsController extends Controller {
       "onTap": () {
         Navigator.push(
           getContext(),
-          MaterialPageRoute(builder: (context) => DevicesView()),
+          MaterialPageRoute(builder: (context) => DevicesView(false)),
         );
       },
     },

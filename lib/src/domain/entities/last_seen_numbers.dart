@@ -10,6 +10,8 @@ class LastSeenNumbers {
   bool? isTracking;
   Product? product;
   bool? is_online;
+  int? use_type;
+  int? connection_type;
   late List<Events>? events;
 
   LastSeenNumbers({
@@ -24,6 +26,8 @@ class LastSeenNumbers {
     this.isTracking,
     this.is_online,
     this.product,
+    this.use_type,
+    this.connection_type,
     this.events,
   });
 
@@ -38,6 +42,8 @@ class LastSeenNumbers {
     number = json['number'];
     isTracking = json['is_tracking'];
     is_online = json['is_online'];
+    use_type = json['use_type'];
+    connection_type = json['connection_type'];
     product =
         json['product'] != null ? new Product.fromJson(json['product']) : null;
     if (json['events'] != null) {
@@ -60,6 +66,8 @@ class LastSeenNumbers {
     data['number'] = this.number;
     data['is_tracking'] = this.isTracking;
     data['is_online'] = this.is_online;
+    data['use_type'] = this.use_type;
+    data['connection_type'] = this.connection_type;
     if (this.product != null) {
       data['product'] = this.product!.toJson();
     }

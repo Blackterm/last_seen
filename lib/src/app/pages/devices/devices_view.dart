@@ -16,6 +16,7 @@ import '../../constants/colors.dart';
 import '../../widgets/analitics_custom_widgets.dart';
 import '../../widgets/default_floating_button.dart';
 import '../../widgets/home_wigets.dart';
+import '../../widgets/tracking_dialog.dart';
 
 class DevicesView extends View {
   @override
@@ -74,6 +75,7 @@ class _DevicesViewState extends ViewState<DevicesView, DevicesController> {
                                 editDevicePopUp(context, controller,
                                     controller.deviceConnectionsList![index]);
                               },
+                              controller: controller,
                             ))
                     : DefaultProgressIndicator();
               }),
@@ -90,91 +92,111 @@ class _PhoneDetailContainer extends StatelessWidget {
   final int status;
   final Function() removeConnection;
   final Function() editDevice;
+  final DevicesController controller;
 
   const _PhoneDetailContainer({
     required this.title,
     required this.status,
     required this.removeConnection,
     required this.editDevice,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colorize.layer,
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: Row(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.phone_android,
-                  color: Colorize.icon,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  title,
-                  style: TextStyle(color: Colorize.text),
-                )
-              ],
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
-              decoration: BoxDecoration(
-                color: status != 0 ? Colorize.primary : Colorize.layer,
-                borderRadius: BorderRadius.circular(4.0),
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colorize.layer,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Row(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.phone_android,
+                color: Colorize.icon,
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Iconify(
-                    status != 0 ? Carbon.checkmark : Carbon.close,
-                    size: 10.0,
+              SizedBox(
+                width: 10,
+              ),
+              Container(
+                width: size.width * 0.2,
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colorize.text),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
+            decoration: BoxDecoration(
+              color: status != 0 ? Colorize.primary : Colorize.layer,
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Iconify(
+                  status != 0 ? Carbon.checkmark : Carbon.close,
+                  size: 10.0,
+                  color: Colorize.black,
+                ),
+                const SizedBox(width: 4.0),
+                Text(
+                  status != 0 ? "active".tr() : "notActive".tr(),
+                  style: const TextStyle(
+                    fontSize: 10.0,
                     color: Colorize.black,
                   ),
-                  const SizedBox(width: 4.0),
-                  Text(
-                    status != 0 ? "active".tr() : "notActive".tr(),
-                    style: const TextStyle(
-                      fontSize: 10.0,
-                      color: Colorize.black,
+                ),
+              ],
+            ),
+          ),
+          Spacer(),
+          status != 0
+              ? Row(
+                  children: [
+                    IconButton(
+                      onPressed: removeConnection,
+                      icon: Iconify(
+                        Carbon.trash_can,
+                        color: Colorize.icon,
+                        size: 20,
+                      ),
                     ),
+                    IconButton(
+                      onPressed: editDevice,
+                      icon: Iconify(
+                        Fa6Solid.pen_to_square,
+                        color: Colorize.icon,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                )
+              : InkWell(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colorize.red,
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Text('Kurulum bekliyor'),
                   ),
-                ],
-              ),
-            ),
-            Spacer(),
-            IconButton(
-              onPressed: removeConnection,
-              icon: Iconify(
-                Carbon.trash_can,
-                color: Colorize.icon,
-                size: 20,
-              ),
-            ),
-            IconButton(
-              onPressed: editDevice,
-              icon: Iconify(
-                Fa6Solid.pen_to_square,
-                color: Colorize.icon,
-                size: 20,
-              ),
-            ),
-          ],
-        ),
+                  onTap: editDevice,
+                )
+        ],
       ),
     );
   }
@@ -233,7 +255,6 @@ _addDevicePopUp(
 
 editDevicePopUp(
   BuildContext context,
-
   DevicesController controller,
   DeviceConnections deviceConnections,
 ) =>
@@ -248,7 +269,7 @@ editDevicePopUp(
               standartTitle(deviceConnections.name!),
               const SizedBox(height: 20.0),
               Text(
-                'Hızlı Takibin başlamasın için lütfen cihazınızda yüklü olan whatsapp uygulamasından kare kod okutunuz',
+                'Hızlı Takibin başlamasın için aşağıdaki linkten, cihazınızda yüklü olan whatsapp uygulamasından kare kod okutunuz',
                 style: TextStyle(
                   fontSize: 12.0,
                   color: Colorize.textSec,

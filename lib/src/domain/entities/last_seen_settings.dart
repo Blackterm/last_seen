@@ -7,6 +7,8 @@ class LastSeenSettings {
   String? mail;
   int? isShowModal;
   int? isShowDemo;
+  int? use_slowly;
+  int? use_speedy;
   String? app_version;
 
   LastSeenSettings({
@@ -18,6 +20,8 @@ class LastSeenSettings {
     this.mail,
     this.isShowModal,
     this.isShowDemo,
+    this.use_slowly,
+    this.use_speedy,
     this.app_version,
   });
 
@@ -30,6 +34,8 @@ class LastSeenSettings {
     termsOfUse = json['terms_of_use'];
     isShowModal = json['is_show_modal'];
     isShowDemo = json['is_show_demo'];
+    use_slowly = json['use_slowly'];
+    use_speedy = json['use_speedy'];
     app_version = json['app_version'];
   }
 
@@ -43,6 +49,8 @@ class LastSeenSettings {
     data['terms_of_use'] = this.termsOfUse;
     data['is_show_modal'] = this.isShowModal;
     data['is_show_demo'] = this.isShowDemo;
+    data['use_slowly'] = this.use_slowly;
+    data['use_speedy'] = this.use_speedy;
     data['app_version'] = this.app_version;
     return data;
   }

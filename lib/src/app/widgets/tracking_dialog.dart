@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:wpfamilylastseen/src/app/pages/devices/devices_view.dart';
 import '../constants/colors.dart';
 
 class TrackingDialog extends StatelessWidget {
@@ -38,7 +39,15 @@ class TrackingDialog extends StatelessWidget {
                     SizedBox(height: size.height * 0.12),
                     InkWell(
                       borderRadius: BorderRadius.circular(8.0),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DevicesView(),
+                          ),
+                        );
+                      },
                       child: Container(
                         width: size.width,
                         height: size.height * 0.07,

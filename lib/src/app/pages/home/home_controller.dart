@@ -121,13 +121,6 @@ class HomeController extends Controller {
     _presenter.getLangaugeRegister();
     _presenter.getNumbers(deviceImei!);
     _presenter.getSettings(deviceImei!);
-
-    Navigator.push(
-      getContext(),
-      MaterialPageRoute(
-        builder: (context) => TrackingDialog(),
-      ),
-    );
   }
 
   @override
@@ -250,7 +243,6 @@ class HomeController extends Controller {
         getContext(),
         MaterialPageRoute(
           builder: (context) => TrialFreePremium(
-            
             controller: this,
           ),
         ),

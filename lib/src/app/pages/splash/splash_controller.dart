@@ -47,6 +47,7 @@ class SplashController extends Controller {
         await FlutterNativeTimezone.getLocalTimezone();
 
     if (result != null) {
+      log(result['imei']);
       _presenter.postLangaugeRegister(
         result['imei'],
         await NotifService.getToken(),

@@ -8,7 +8,6 @@ import 'package:wpfamilylastseen/src/domain/entities/device_connections.dart';
 
 import '../../../domain/repositories/home_page_repository.dart';
 import '../../widgets/default_notification_banner.dart';
-import 'devices_view.dart';
 
 class DevicesController extends Controller {
   final DevicesPresenter _presenter;
@@ -27,6 +26,8 @@ class DevicesController extends Controller {
   List<DeviceConnections>? deviceConnectionsList;
   AddConnection? addConnection;
 
+  bool? toDoSetup;
+
   bool toDoCopy = false;
 
   @override
@@ -34,6 +35,9 @@ class DevicesController extends Controller {
     sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences!.getString('deviceImei') != null
         ? deviceImei = sharedPreferences!.getString('deviceImei')
+        : null;
+    await sharedPreferences!.getBool('toDoSetup') != null
+        ? toDoSetup = sharedPreferences!.getBool('toDoSetup')
         : null;
 
     _presenter.getDeviceConnections(deviceImei!);

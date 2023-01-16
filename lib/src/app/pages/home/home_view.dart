@@ -8,6 +8,7 @@ import 'package:iconify_flutter/icons/fa6_solid.dart';
 import 'package:iconify_flutter/icons/gg.dart';
 import 'package:iconify_flutter/icons/ion.dart';
 import 'package:iconify_flutter/icons/wpf.dart';
+import 'package:wpfamilylastseen/src/app/pages/devices/devices_view.dart';
 import 'package:wpfamilylastseen/src/app/pages/home/home_controller.dart';
 import 'package:wpfamilylastseen/src/app/pages/settings/settings_view.dart';
 import 'package:wpfamilylastseen/src/data/repositories/data_home_page_repository.dart';
@@ -17,6 +18,8 @@ import '../../widgets/default_floating_button.dart';
 import '../../widgets/home_page_popups.dart';
 import '../../widgets/home_wigets.dart';
 import 'package:easy_localization/easy_localization.dart';
+
+import '../../widgets/tracking_dialog.dart';
 
 class HomeView extends View {
   @override
@@ -402,61 +405,80 @@ class _HomePagePhoneCardTileState extends State<HomePagePhoneCardTile> {
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 24.0,
-                          height: 24.0,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {
-                              widget.controller.nameController.text =
-                                  widget.phones!.name!;
+                    widget.phones != null && widget.phones!.use_type != 0 ||
+                            widget.phones!.connection_type != 0
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: 24.0,
+                                height: 24.0,
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    widget.controller.nameController.text =
+                                        widget.phones!.name!;
 
-                              editPhonePopUp(
+                                    editPhonePopUp(
+                                      context,
+                                      widget.phones!,
+                                      widget.phones!.notification!,
+                                      widget.controller,
+                                      size,
+                                      widget.phones!.isFavorite!,
+                                    );
+                                  },
+                                  icon: const Iconify(
+                                    Fa6Solid.pen_to_square,
+                                    color: Colorize.icon,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16.0),
+                              SizedBox(
+                                width: 24.0,
+                                height: 24.0,
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    widget.controller.numberQuery(
+                                        widget.phones!.id.toString());
+                                  },
+                                  icon: const Iconify(
+                                    Wpf.statistics,
+                                    color: Colorize.icon,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : InkWell(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: Colorize.red,
+                                borderRadius: BorderRadius.circular(4.0),
+                              ),
+                              child: Text('Kurulum bekliyor'),
+                            ),
+                            onTap: () {
+                              Navigator.push(
                                 context,
-                                widget.phones!,
-                                widget.phones!.notification!,
-                                widget.controller,
-                                size,
-                                widget.phones!.isFavorite!,
+                                MaterialPageRoute(
+                                  builder: (context) => TrackingDialog(),
+                                ),
                               );
                             },
-                            icon: const Iconify(
-                              Fa6Solid.pen_to_square,
-                              color: Colorize.icon,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16.0),
-                        SizedBox(
-                          width: 24.0,
-                          height: 24.0,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {
-                              widget.controller
-                                  .numberQuery(widget.phones!.id.toString());
-                            },
-                            icon: const Iconify(
-                              Wpf.statistics,
-                              color: Colorize.icon,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                          )
                   ],
-                ),
+                )
               ],
             ),
           )
         : Container();
   }
 }
-
-
 
 class NullPhoneWidget extends StatelessWidget {
   const NullPhoneWidget({Key? key}) : super(key: key);

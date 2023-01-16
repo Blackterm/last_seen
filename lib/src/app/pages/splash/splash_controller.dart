@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wpfamilylastseen/src/app/pages/splash/splash_presenter.dart';
@@ -17,6 +18,7 @@ import '../../../domain/entities/last_seen_settings.dart';
 import '../../../domain/repositories/home_page_repository.dart';
 import '../../widgets/default_dialog.dart';
 import '../home/home_view.dart';
+import 'package:yaml/yaml.dart';
 
 class SplashController extends Controller {
   final SplashPresenter _presenter;
@@ -31,13 +33,14 @@ class SplashController extends Controller {
   LangaugeRegister? langaugeRegister;
   LastSeenSettings? lastSeenSettings;
   bool isEDeclarationFetched = false;
+  PackageInfo? packageInfo;
 
   var result;
 
-  String? versionControl = "1.0.3";
-
   @override
   void onInitState() async {
+    packageInfo = await PackageInfo.fromPlatform();
+
     sharedPreferences = await SharedPreferences.getInstance();
 
     NotifService.connectNotification();
@@ -54,7 +57,6 @@ class SplashController extends Controller {
         Platform.localeName,
         result["modal"],
       );
-
       return;
     }
   }
@@ -79,7 +81,7 @@ class SplashController extends Controller {
         if (langaugeRegister != null &&
             langaugeRegister!.translations != null &&
             lastSeenSettings != null) {
-          if (lastSeenSettings!.app_version != versionControl) {
+          if (lastSeenSettings!.app_version != packageInfo!.version) {
             DefaultLoadingDialog(
               text: "updatetext".tr(),
               context: getContext(),
@@ -113,6 +115,7 @@ class SplashController extends Controller {
     try {
       if (Platform.isAndroid) {
         var info = await deviceInfoPlugin.androidInfo;
+
         device = {
           "imei": deviceId,
           "modal": info.model,

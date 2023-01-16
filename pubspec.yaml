@@ -46,6 +46,7 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   eventify: ^1.0.1
   flutter_spinkit: ^5.1.0
+  package_info_plus: ^3.0.1
 
   
 
